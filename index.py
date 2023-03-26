@@ -19,6 +19,7 @@ operation_times = []
 regular_holidays = []
 down_budgets = []
 up_budgets = []
+stations = []
 
 for prefecture in prefectures:
     for i in range(0,60):
@@ -32,12 +33,6 @@ for prefecture in prefectures:
         for v in shop_links:
             shop_link = v.get("href")
             links.append(shop_link)
-
-
-
-
-
-
 for shop_detail_link in links:
     time.sleep(2)
     print("shop_detail_link",shop_detail_link)
@@ -45,10 +40,14 @@ for shop_detail_link in links:
     soup = BeautifulSoup(res.text, "html.parser")
     table = soup.find("table",class_="c-table c-table--form rstinfo-table__table")
 
+    try:
+        station = soup.find_all("span", class_='linktree__parent-target-text')[0].text
+        stations.append(station)
+    except:
+        stations.append("")
+
 
     rows = table.find_all("tr")
-
-
 
     for i,row in enumerate(rows):
         td = row.find("td")
@@ -123,6 +122,7 @@ print("up_budgets",len(up_budgets))
 print("regular_holidays",len(regular_holidays))
 print("operation_times",len(operation_times))
 print("links",len(links))
+print("statins",len(stations))
 
 
     
@@ -136,6 +136,7 @@ df = pd.DataFrame({
     "定休日":regular_holidays,
     "営業時間":operation_times,
     "店のリンク":links,
+    "最寄駅":stations,
 
 
 })
